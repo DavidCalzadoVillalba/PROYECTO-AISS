@@ -22,11 +22,6 @@ public class Comment {
     @JsonProperty("createdOn")
     private String createdOn;
 
-    @JsonProperty("author")
-    @OneToOne(cascade = CascadeType.ALL)
-    @NotNull(message = "Comment author cannot be null")
-    private User author;
-
     public String getId() {
         return id;
     }
