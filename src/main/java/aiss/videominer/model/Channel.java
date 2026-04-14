@@ -1,5 +1,9 @@
 package aiss.videominer.model;
 
+
+ // Hola
+
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
