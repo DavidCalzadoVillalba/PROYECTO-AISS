@@ -16,8 +16,8 @@ public class Caption {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("link")
+    private String link;
 
     @JsonProperty("language")
     private String language;
@@ -31,12 +31,12 @@ public class Caption {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLink() {
+        return link;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getLanguage() {
@@ -51,7 +51,7 @@ public class Caption {
     public String toString() {
         return "Caption{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", link='" + link + '\'' +
                 ", language='" + language + '\'' +
                 '}';
     }
