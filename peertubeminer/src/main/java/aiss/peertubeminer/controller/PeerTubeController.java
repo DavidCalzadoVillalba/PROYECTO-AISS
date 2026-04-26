@@ -19,7 +19,9 @@ public class PeerTubeController {
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
         System.out.println("Minando canal: " + channelId);
-        Channel channel = service.getChannel(channelId);
+        
+        // AQUÍ ESTÁ EL CAMBIO: Le pasamos los parámetros al servicio
+        Channel channel = service.getChannel(channelId, maxVideos, maxComments);
 
         return channel;
     }
