@@ -18,7 +18,7 @@ public class DailymotionController {
     public String getMethodName(@RequestParam String param) {
         return new String();
     }
-
+    // crear un chanel desde su id
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
