@@ -12,6 +12,11 @@ public class DailymotionController {
     @Autowired
     DailymotionService service;
 
+    @GetMapping
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+
     @PostMapping("/{channelId}")
     public Channel createChannel(
             @PathVariable String channelId,
