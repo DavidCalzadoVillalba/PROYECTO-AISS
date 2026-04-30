@@ -12,6 +12,7 @@ public class DailymotionService {
     @Autowired
     RestTemplate restTemplate;
     private final String BASE_URL = "https://api.dailymotion.com";
+    private final String VIDEOMINER_URL = "http://localhost:8080/channels";
 
     public Channel getChannel(String channelId) {
         String url = BASE_URL + "/user/" + channelId;
@@ -23,6 +24,15 @@ public class DailymotionService {
         } catch (HttpClientErrorException e) {
             System.err.println("Error al contactar con Dailymotion: " + e.getStatusCode());
             throw e;
+        }
+    }
+
+    public Channel createChannel(Channel channel) {
+        try {
+            return restTemplate.postForObject(VIDEOMINER_URL, channel, Channel.class);
+        } catch (HttpClientErrorException e) {
+            System.err.println("Error al enviar el canal a VideoMiner: " + e.getStatusCode());
+            return null;
         }
     }
 }
