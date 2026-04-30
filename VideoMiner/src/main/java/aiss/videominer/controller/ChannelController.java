@@ -31,11 +31,9 @@ public class ChannelController {
         return ResponseEntity.ok(channel.get());
     }
 
-    // Petición POST para guardar un canal completo
     @PostMapping
     public ResponseEntity<Channel> createChannel(@RequestBody Channel channel) {
         Channel savedChannel = service.saveChannel(channel);
-        // Devolvemos un 201 Created para seguir las buenas prácticas REST
         return ResponseEntity.status(HttpStatus.CREATED).body(savedChannel);
     }
 }

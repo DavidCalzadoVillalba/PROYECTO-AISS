@@ -29,7 +29,7 @@ public class VideoController {
     public ResponseEntity<Video> findOne(@PathVariable String id) {
         Optional<Video> video = service.getVideoById(id);
 
-            if (video.isEmpty()) {
+        if (video.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 

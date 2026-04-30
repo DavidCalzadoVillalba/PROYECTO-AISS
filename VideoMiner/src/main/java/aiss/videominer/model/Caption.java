@@ -1,6 +1,7 @@
 package aiss.videominer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -22,6 +23,8 @@ public class Caption {
     @JsonProperty("language")
     private String language;
 
+    @Column(name = "video_id", insertable = false, updatable = false)
+    private String videoId;
 
     public String getId() {
         return id;
@@ -47,12 +50,21 @@ public class Caption {
         this.language = language;
     }
 
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
+    }
+
     @Override
     public String toString() {
         return "Caption{" +
                 "id='" + id + '\'' +
                 ", link='" + link + '\'' +
                 ", language='" + language + '\'' +
+                ", videoId='" + videoId + '\'' +
                 '}';
     }
 }

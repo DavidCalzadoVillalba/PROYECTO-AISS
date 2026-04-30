@@ -28,7 +28,7 @@ public class CaptionController {
         Optional<Caption> caption = service.getCaptionById(id);
 
         if (caption.isEmpty()) {
-            return ResponseEntity.notFound().build(); // El Controller maneja la respuesta HTTP
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(caption.get());
