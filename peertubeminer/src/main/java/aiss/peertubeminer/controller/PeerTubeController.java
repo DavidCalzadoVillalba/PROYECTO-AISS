@@ -51,8 +51,8 @@ public class PeerTubeController {
         }
 
         // 2. ENVIAMOS LOS DATOS A VIDEOMINER
-        // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /videominer/channels
-        String videoMinerUrl = "http://localhost:8080/videominer/channels";
+        // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /channels
+        String videoMinerUrl = "http://localhost:8080/channels";
         
         try {
             System.out.println("Enviando datos a VideoMiner en: " + videoMinerUrl);
