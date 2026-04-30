@@ -3,6 +3,7 @@ package aiss.peertubeminer.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonAlias; // AÑADIR IMPORT
 
 public class Channel {
 
@@ -10,12 +11,14 @@ public class Channel {
     private String id;
 
     @JsonProperty("name")
+    @JsonAlias("displayName") // PeerTube a veces manda displayName
     private String name;
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("createdTime")
+    @JsonAlias("createdAt") // PeerTube manda createdAt
     private String createdTime;
 
     @JsonProperty("videos")

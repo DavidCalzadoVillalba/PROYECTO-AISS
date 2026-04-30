@@ -1,5 +1,6 @@
 package aiss.peertubeminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -15,10 +16,12 @@ public class Video {
     private String description;
 
     @JsonProperty("releaseTime")
+    @JsonAlias("publishedAt") // PeerTube manda publishedAt
     private String releaseTime;
 
     @JsonProperty("user")
-    private User author;
+    @JsonAlias("account") // En peertube user es account
+    private User user;
 
     @JsonProperty("comments")
     private List<Comment> comments;
@@ -59,11 +62,11 @@ public class Video {
     }
 
     public User getAuthor() {
-        return author;
+        return user;
     }
 
     public void setAuthor(User author) {
-        this.author = author;
+        this.user = author;
     }
     
     public List<Comment> getComments() {
@@ -89,7 +92,7 @@ public class Video {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", releaseTime='" + releaseTime + '\'' +
-                ", author=" + author +
+                ", user=" + user +
                 ", comments=" + comments +
                 ", captions=" + captions +
                 '}';

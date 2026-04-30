@@ -1,23 +1,28 @@
 package aiss.peertubeminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class User {
 
-
     @JsonProperty("id")
     private Long id;
 
     @JsonProperty("name")
+    @JsonAlias("displayName") // PeerTube suele mandar displayName
     private String name;
 
     @JsonProperty("user_link")
+    @JsonAlias("url") // PeerTube manda la etiqueta url
     private String user_link;
 
     @JsonProperty("picture_link")
-    private String picture_link;
-
+    private String picture_link; 
+    // Nota: La foto de perfil en PeerTube viene en un array anidado llamado 'avatars', 
+    // es un poco complejo de mapear de forma plana, así que es normal si este se queda en null 
+    // a menos que hagáis un mapeo personalizado más avanzado.
+    
     public Long getId() {
         return id;
     }

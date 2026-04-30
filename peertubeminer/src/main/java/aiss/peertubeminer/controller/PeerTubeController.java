@@ -5,9 +5,7 @@ import aiss.peertubeminer.service.PeerTubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.client.RestTemplate; // NUEVO IMPORT
 
 @RestController
 @RequestMapping("/peertube")
@@ -16,12 +14,11 @@ public class PeerTubeController {
     @Autowired
     PeerTubeService service;
 
-    // --- NUEVO: MÉTODO GET PARA PRUEBAS (Solo lee) ---
-    @GetMapping()
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }
-    
+    // Inyectamos RestTemplate para poder enviar datos a VideoMiner
+    @Autowired
+    RestTemplate restTemplate;
+
+    // --- GET: MODO LECTURA ---
     @GetMapping("/{channelId}")
     public ResponseEntity<Channel> getChannel(
             @PathVariable String channelId,
@@ -34,11 +31,10 @@ public class PeerTubeController {
         if (channel == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(channel);
     }
 
-    // --- EL POST ORIGINAL (Aún pendiente de enviar a VideoMiner) ---
+    // --- POST: MODO MINERO (Envía a VideoMiner) ---
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
@@ -46,14 +42,31 @@ public class PeerTubeController {
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
         System.out.println("Modo minado: Extrayendo canal " + channelId + " para enviarlo a VideoMiner");
+        
+        // 1. Obtenemos los datos de la API externa (ya traducidos gracias a @JsonAlias)
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
 
         if (channel == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // TODO: Aquí nos falta el código para enviar 'channel' a VideoMiner
+        // 2. ENVIAMOS LOS DATOS A VIDEOMINER
+        // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /videominer/channels
+        String videoMinerUrl = "http://localhost:8080/videominer/channels";
         
-        return ResponseEntity.ok(channel);
+        try {
+            System.out.println("Enviando datos a VideoMiner en: " + videoMinerUrl);
+            
+            // postForObject hace la petición POST y le envía nuestro objeto 'channel' en el body
+            Channel savedChannel = restTemplate.postForObject(videoMinerUrl, channel, Channel.class);
+            
+            // Devolvemos el canal tal y como nos lo ha confirmado VideoMiner (probablemente con un ID nuevo de base de datos)
+            return ResponseEntity.ok(savedChannel);
+            
+        } catch (Exception e) {
+            System.out.println("Error al comunicarse con VideoMiner: " + e.getMessage());
+            // Si VideoMiner está apagado o falla, devolvemos un error 400 (Bad Request) o 503 (Service Unavailable)
+            return ResponseEntity.status(503).build(); 
+        }
     }
 }

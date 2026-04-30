@@ -63,7 +63,7 @@ public class PeerTubeService {
             return channel;
 
         } catch (HttpClientErrorException e) {
-            // AQUÍ ATRAPAMOS EL ERROR. Si el canal no existe, ya no crashea, devuelve null.
+            // Aqui pillamos el error que salte, si el canal no existe o hay algun otro problema y devolvemos null + mensaje de error
             System.out.println("Error en PeerTube al buscar el canal. Código: " + e.getStatusCode());
             return null;
         }
