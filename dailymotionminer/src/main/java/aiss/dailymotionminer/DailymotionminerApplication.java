@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 public class DailymotionminerApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(DailymotionminerApplication.class, args);
 	}
 	@Bean
