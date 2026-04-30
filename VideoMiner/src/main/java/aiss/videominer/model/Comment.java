@@ -21,6 +21,9 @@ public class Comment {
     @JsonProperty("createdOn")
     private String createdOn;
 
+    @Column(name = "video_id", insertable = false, updatable = false)
+    private String videoId;
+
     public String getId() {
         return id;
     }
@@ -45,6 +48,13 @@ public class Comment {
         this.createdOn = createdOn;
     }
 
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
+    }
 
     @Override
     public String toString() {
@@ -52,6 +62,7 @@ public class Comment {
                 "id='" + id + '\'' +
                 ", text='" + text + '\'' +
                 ", createdOn='" + createdOn + '\'' +
+                ", videoId='" + videoId + '\'' +
                 '}';
     }
 }

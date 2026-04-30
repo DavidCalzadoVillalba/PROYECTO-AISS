@@ -11,15 +11,11 @@ public class DailymotionService {
 
     @Autowired
     RestTemplate restTemplate;
-
-    // URL base de la API de Dailymotion
     private final String BASE_URL = "https://api.dailymotion.com";
 
     public Channel getChannel(String channelId) {
         String url = BASE_URL + "/user/" + channelId;
-
         System.out.println("Buscando datos en Dailymotion: " + url);
-
         try {
             Channel channel = restTemplate.getForObject(url, Channel.class);
             return channel;

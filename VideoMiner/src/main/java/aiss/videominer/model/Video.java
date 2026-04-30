@@ -36,12 +36,12 @@ public class Video {
 
     @JsonProperty("comments")
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "videoId")
+    @JoinColumn(name = "video_id")
     private List<Comment> comments;
 
     @JsonProperty("captions")
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "videoId")
+    @JoinColumn(name = "video_id")
     private List<Caption> captions;
 
     public String getId() {
