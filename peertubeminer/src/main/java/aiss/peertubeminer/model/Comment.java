@@ -1,5 +1,6 @@
 package aiss.peertubeminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Comment {
@@ -11,6 +12,7 @@ public class Comment {
     private String text;
 
     @JsonProperty("createdOn")
+    @JsonAlias("createdAt") // PeerTube manda createdAt
     private String createdOn;
 
     public String getId() {
