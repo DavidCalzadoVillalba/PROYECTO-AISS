@@ -25,7 +25,7 @@ public class PeerTubeController {
             @RequestParam(defaultValue = "10") Integer maxVideos,
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
-        System.out.println("Modo lectura: Buscando canal " + channelId);
+        System.out.println("Modo lectura: Buscando canal de Peertube" + channelId);
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
 
         if (channel == null) {
@@ -41,7 +41,7 @@ public class PeerTubeController {
             @RequestParam(defaultValue = "10") Integer maxVideos,
             @RequestParam(defaultValue = "2") Integer maxComments) {
 
-        System.out.println("Modo minado: Extrayendo canal " + channelId + " para enviarlo a VideoMiner");
+        System.out.println("Modo minado: Extrayendo canal de Peertube " + channelId + " para enviarlo a VideoMiner");
         
         // 1. Obtenemos los datos de la API externa (ya traducidos gracias a @JsonAlias)
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
@@ -66,7 +66,7 @@ public class PeerTubeController {
         } catch (Exception e) {
             System.out.println("Error al comunicarse con VideoMiner: " + e.getMessage());
             // Si VideoMiner está apagado o falla, devolvemos un error 400 (Bad Request) o 503 (Service Unavailable)
-            return ResponseEntity.status(503).build(); 
+            return ResponseEntity.status(503).build();
         }
     }
 }

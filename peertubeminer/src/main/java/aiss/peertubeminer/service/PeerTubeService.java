@@ -6,7 +6,7 @@ import aiss.peertubeminer.model.Comment;
 import aiss.peertubeminer.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException; // IMPORTANTE
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -23,7 +23,6 @@ public class PeerTubeService {
     record VideoResponse(List<Video> data) {}
     record CommentResponse(List<Comment> data) {}
     record CaptionResponse(List<Caption> data) {}
-
     public Channel getChannel(String channelId, int maxVideos, int maxComments) {
         try {
             // 1. Obtener los datos básicos del canal
