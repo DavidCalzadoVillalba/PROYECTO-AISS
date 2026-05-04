@@ -3,6 +3,8 @@ package aiss.videominer.service;
 import aiss.videominer.model.Caption;
 import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
+import io.micrometer.common.lang.NonNull;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class CaptionService {
     public List<Caption> getAllCaptions() {
         return repository.findAll();
     }
-
+    
     public Optional<Caption> getCaptionById(String id) {
         return repository.findById(id);
     }

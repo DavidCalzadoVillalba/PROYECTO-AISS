@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
@@ -7,22 +8,25 @@ public class User {
 
 
     @JsonProperty("id")
-    private Long id;
+    private String id;
 
     @JsonProperty("name")
+    @JsonAlias({"screenname", "username"})
     private String name;
 
     @JsonProperty("user_link")
+    @JsonAlias("url")
     private String user_link;
 
     @JsonProperty("picture_link")
+    @JsonAlias("avatar_360_url")
     private String picture_link;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

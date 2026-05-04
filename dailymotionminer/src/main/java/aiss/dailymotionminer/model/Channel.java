@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +11,14 @@ public class Channel {
     private String id;
 
     @JsonProperty("name")
+    @JsonAlias({"screenname", "username"})
     private String name;
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("createdTime")
+    @JsonAlias("created_time")
     private String createdTime;
 
     @JsonProperty("videos")

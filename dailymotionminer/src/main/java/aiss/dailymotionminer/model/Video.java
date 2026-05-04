@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -9,15 +10,18 @@ public class Video {
     private String id;
 
     @JsonProperty("name")
+    @JsonAlias("title")
     private String name;
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("releaseTime")
+    @JsonAlias("created_time")
     private String releaseTime;
 
     @JsonProperty("user")
+    @JsonAlias("owner")
     private User author;
 
     @JsonProperty("comments")

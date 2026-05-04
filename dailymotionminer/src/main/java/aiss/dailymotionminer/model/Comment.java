@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Comment {
@@ -8,9 +9,11 @@ public class Comment {
     private String id;
 
     @JsonProperty("text")
+    @JsonAlias("message")
     private String text;
 
     @JsonProperty("createdOn")
+    @JsonAlias("created_time")
     private String createdOn;
 
     public String getId() {

@@ -14,20 +14,33 @@ public class DailymotionController {
     @Autowired
     DailymotionService service;
 
-    @GetMapping
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    // GET: read-only mode
+    @GetMapping("/{channelId}")
+    public ResponseEntity<Channel> getChannel(
+            @PathVariable String channelId,
+            @RequestParam(defaultValue = "10") Integer maxVideos,
+            @RequestParam(defaultValue = "2") Integer maxPages) {
+
+        System.out.println("Modo lectura: Buscando canal de Dailymotion: " + channelId);
+
+        Channel channel = service.getChannel(channelId, maxVideos, maxPages);
+        if (channel == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(channel);
     }
-    // crear un chanel desde su id
+
+    // POST: mining mode (send to VideoMiner)
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxComments) {
+            @RequestParam(defaultValue = "2") Integer maxPages) {
 
-        System.out.println("Minando el canal de Dailymotion: " + channelId);
+        System.out.println("Modo minado: Extrayendo canal de Dailymotion: " + channelId);
 
-        Channel channel = service.getChannel(channelId);
+        Channel channel = service.getChannel(channelId, maxVideos, maxPages);
         if (channel == null) {
             return ResponseEntity.notFound().build();
         }
