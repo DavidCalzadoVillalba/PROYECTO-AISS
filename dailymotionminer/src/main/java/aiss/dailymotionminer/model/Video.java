@@ -10,25 +10,31 @@ public class Video {
     private String id;
 
     @JsonProperty("name")
-    @JsonAlias("title")
+    @JsonAlias("title") // Dailymotion lo llama title
     private String name;
 
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("releaseTime")
-    @JsonAlias("created_time")
+    @JsonAlias("created_time") // Dailymotion lo llama created_time
     private String releaseTime;
 
     @JsonProperty("user")
-    @JsonAlias("owner")
-    private User author;
+    @JsonAlias("owner") // Dailymotion lo llama owner
+    private User user; // Renombrado de 'author' a 'user' para cumplir con el UML
 
     @JsonProperty("comments")
     private List<Comment> comments;
 
     @JsonProperty("captions")
     private List<Caption> captions;
+
+    // --- NUEVO: Añadimos la propiedad tags ---
+    @JsonProperty("tags")
+    private List<String> tags;
+
+    // --- GETTERS Y SETTERS ---
 
     public String getId() {
         return id;
@@ -62,14 +68,14 @@ public class Video {
         this.releaseTime = releaseTime;
     }
 
-    public User getAuthor() {
-        return author;
+    public User getUser() {
+        return user;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setUser(User user) {
+        this.user = user;
     }
-    
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -86,6 +92,15 @@ public class Video {
         this.captions = captions;
     }
 
+    // --- GETTER Y SETTER PARA LOS TAGS ---
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "Video{" +
@@ -93,9 +108,10 @@ public class Video {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", releaseTime='" + releaseTime + '\'' +
-                ", author=" + author +
+                ", user=" + user +
                 ", comments=" + comments +
                 ", captions=" + captions +
+                ", tags=" + tags +
                 '}';
     }
 }
