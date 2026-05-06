@@ -52,7 +52,7 @@ public class DailymotionService {
             // Creamos el canal limpio y lo rellenamos a mano a prueba de fallos
             Channel channel = new Channel();
             channel.setId(dc.id());
-            // Si el nombre viene nulo, ponemos un texto por defecto 
+            // Si el nombre viene nulo, ponemos un texto por defecto
             channel.setName(dc.screenname() != null ? dc.screenname() : "Nombre desconocido");
             channel.setDescription(dc.description());
             channel.setCreatedTime(dc.created_time() != null ? String.valueOf(dc.created_time()) : "Fecha desconocida");
