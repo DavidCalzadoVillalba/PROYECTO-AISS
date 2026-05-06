@@ -3,6 +3,7 @@ package aiss.dailymotionminer.service;
 import aiss.dailymotionminer.model.Caption;
 import aiss.dailymotionminer.model.Channel;
 import aiss.dailymotionminer.model.Comment;
+import aiss.dailymotionminer.model.User;
 import aiss.dailymotionminer.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,68 +22,107 @@ public class DailymotionService {
 
     private final String BASE_URL = "https://api.dailymotion.com";
 
-    // Mismos records que en PeerTube, adaptados a la etiqueta "list" de Dailymotion
-    record VideoResponse(List<Video> list) {}
-    record SubtitleResponse(List<Caption> list) {}
+    /* =====================================================================
+     * WRAPPERS TEMPORALES (Moldes para engañar al JSON de Dailymotion)
+     * ===================================================================== */
 
-    public Channel getChannel(String channelId, int maxVideos, int maxPages) {
+    // NUEVO: Wrapper para el Canal
+    record DailymotionChannel(String id, String screenname, String description, Long created_time) {}
+
+    // Wrappers para Vídeos y Subtítulos
+    record DailymotionVideoResponse(List<DailymotionVideo> list) {}
+    record DailymotionSubtitleResponse(List<DailymotionSubtitle> list) {}
+    record DailymotionVideo(String id, String title, String description, Long created_time, DailymotionOwner owner, List<String> tags) {}
+    record DailymotionOwner(String id, String screenname, String url, String avatar_720_url) {}
+    record DailymotionSubtitle(String id, String language, String url) {}
+
+    /* =====================================================================
+     * LÓGICA PRINCIPAL DEL MINER
+     * ===================================================================== */
+
+    public Channel getChannel(String channelId, Integer maxVideos, Integer maxPages) {
         try {
-            // 1. Obtener los datos básicos del canal
+            // 1. OBTENER EL CANAL BÁSICO CON EL WRAPPER
             String channelUrl = BASE_URL + "/user/" + channelId + "?fields=id,screenname,description,created_time";
             System.out.println("Buscando canal en Dailymotion: " + channelUrl);
-            Channel channel = restTemplate.getForObject(channelUrl, Channel.class);
 
-            if (channel == null) return null;
+            DailymotionChannel dc = restTemplate.getForObject(channelUrl, DailymotionChannel.class);
+            if (dc == null) return null;
 
-            List<Video> allVideos = new ArrayList<>();
+            // Creamos el canal limpio y lo rellenamos a mano a prueba de fallos
+            Channel channel = new Channel();
+            channel.setId(dc.id());
+            // Si el nombre viene nulo, ponemos un texto por defecto
+            channel.setName(dc.screenname() != null ? dc.screenname() : "Nombre desconocido");
+            channel.setDescription(dc.description());
+            channel.setCreatedTime(dc.created_time() != null ? String.valueOf(dc.created_time()) : "Fecha desconocida");
 
-            // 2. Obtener los vídeos (Añadimos un bucle para cumplir con maxPages)
-            for (int i = 1; i <= maxPages; i++) {
-                String videosUrl = BASE_URL + "/user/" + channelId + "/videos?limit=" + maxVideos + "&page=" + i + "&fields=id,title,description,created_time,tags,owner.id,owner.screenname,owner.avatar_360_url";
-                System.out.println("Buscando vídeos en Dailymotion (página " + i + "): " + videosUrl);
-                VideoResponse videoResponse = restTemplate.getForObject(videosUrl, VideoResponse.class);
+            // 2. OBTENER LOS VÍDEOS DEL CANAL
+            String videosUrl = BASE_URL + "/user/" + channelId + "/videos?fields=id,title,description,created_time,owner.id,owner.screenname,owner.url,owner.avatar_720_url,tags&limit=" + maxVideos;
 
-                if (videoResponse != null && videoResponse.list() != null && !videoResponse.list().isEmpty()) {
-                    List<Video> videos = videoResponse.list();
+            DailymotionVideoResponse videoResponse = restTemplate.getForObject(videosUrl, DailymotionVideoResponse.class);
 
-                    // 3. Por cada vídeo, buscar sus comentarios y subtítulos
-                    for (Video video : videos) {
-                        
-                        // 3.1. Dailymotion NO tiene comentarios. Convertimos los "tags" a Comentarios según el PDF
-                        List<Comment> fakeComments = new ArrayList<>();
-                        if (video.getTags() != null) {
-                            for (String tag : video.getTags()) {
-                                Comment comment = new Comment();
-                                comment.setId(UUID.randomUUID().toString()); // Inventamos un ID aleatorio
-                                comment.setText(tag);
-                                comment.setCreatedOn(video.getReleaseTime());
-                                fakeComments.add(comment);
-                            }
-                        }
-                        video.setComments(fakeComments);
+            if (videoResponse != null && videoResponse.list() != null) {
+                List<Video> videosLimpios = new ArrayList<>();
 
-                        // 3.2. Buscar subtítulos (captions) manteniendo tu mismo try-catch de PeerTube
-                        try {
-                            String subtitlesUrl = BASE_URL + "/video/" + video.getId() + "/subtitles";
-                            SubtitleResponse subtitleResponse = restTemplate.getForObject(subtitlesUrl, SubtitleResponse.class);
-                            if (subtitleResponse != null) video.setCaptions(subtitleResponse.list());
-                        } catch (HttpClientErrorException e) {
-                            System.out.println("No hay subtítulos (o falló) en el vídeo: " + video.getId());
+                for (DailymotionVideo dv : videoResponse.list()) {
+                    Video v = new Video();
+                    v.setId(dv.id());
+                    // Salvavidas para los vídeos por si vienen nulos
+                    v.setName(dv.title() != null ? dv.title() : "Video sin titulo");
+                    v.setDescription(dv.description());
+                    v.setReleaseTime(dv.created_time() != null ? String.valueOf(dv.created_time()) : "Fecha desconocida");
+
+                    if (dv.owner() != null) {
+                        User author = new User();
+                        author.setId(String.valueOf((long) Math.abs(dv.owner().id().hashCode())));
+                        author.setName(dv.owner().screenname());
+                        author.setUser_link(dv.owner().url());
+                        author.setPicture_link(dv.owner().avatar_720_url());
+                        v.setUser(author);
+                    }
+
+                    List<Comment> comments = new ArrayList<>();
+                    if (dv.tags() != null) {
+                        for (String tag : dv.tags()) {
+                            Comment c = new Comment();
+                            c.setId(UUID.randomUUID().toString());
+                            c.setText(tag);
+                            c.setCreatedOn(v.getReleaseTime());
+                            comments.add(c);
                         }
                     }
-                    
-                    allVideos.addAll(videos);
-                } else {
-                    break; // Si la página viene vacía, rompemos el bucle
+                    v.setComments(comments);
+
+                    try {
+                        String captionsUrl = BASE_URL + "/video/" + dv.id() + "/subtitles";
+                        DailymotionSubtitleResponse captionResponse = restTemplate.getForObject(captionsUrl, DailymotionSubtitleResponse.class);
+
+                        if (captionResponse != null && captionResponse.list() != null) {
+                            List<Caption> captions = new ArrayList<>();
+                            for (DailymotionSubtitle ds : captionResponse.list()) {
+                                Caption caption = new Caption();
+                                caption.setId(ds.id());
+                                caption.setLanguage(ds.language());
+                                caption.setLink(ds.url());
+                                captions.add(caption);
+                            }
+                            v.setCaptions(captions);
+                        }
+                    } catch (HttpClientErrorException e) {
+                        System.out.println("No hay subtítulos en el vídeo: " + dv.id());
+                    }
+
+                    videosLimpios.add(v);
                 }
+
+                channel.setVideos(videosLimpios);
             }
-            
-            channel.setVideos(allVideos);
+
             return channel;
 
         } catch (HttpClientErrorException e) {
-            // Aqui pillamos el error que salte, si el canal no existe o hay algun otro problema y devolvemos null + mensaje de error
-            System.out.println("Error en Dailymotion al buscar el canal. Código: " + e.getStatusCode());
+            System.err.println("Error 404 o conexión fallida con Dailymotion: " + e.getStatusCode());
             return null;
         }
     }
