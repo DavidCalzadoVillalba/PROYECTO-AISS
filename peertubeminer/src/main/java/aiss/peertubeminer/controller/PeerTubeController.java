@@ -2,6 +2,10 @@ package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.model.Channel;
 import aiss.peertubeminer.service.PeerTubeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,15 +13,21 @@ import org.springframework.web.client.RestTemplate; // NUEVO IMPORT
 
 @RestController
 @RequestMapping("/peertube")
+@Tag(name = "PeerTube Miner", description = "Servicio de extracción de datos de PeerTube")
+
 public class PeerTubeController {
 
     @Autowired
     PeerTubeService service;
-
-    // Inyectamos RestTemplate para poder enviar datos a VideoMiner
     @Autowired
     RestTemplate restTemplate;
-
+    // informacion openApi 
+    @Operation(
+        summary = "Obtener datos de un canal",
+        description = "Busca la información de un canal de peertube por su ID y la devuelve en formato JSON. No guarda nada en base de datos."
+    )
+    @ApiResponse(responseCode = "200", description = "Canal encontrado y devuelto correctamente")
+    @ApiResponse(responseCode = "404", description = "El canal no existe en Peertube")
     // --- GET: MODO LECTURA ---
     @GetMapping("/{channelId}")
     public ResponseEntity<Channel> getChannel(
@@ -33,7 +43,13 @@ public class PeerTubeController {
         }
         return ResponseEntity.ok(channel);
     }
-
+    @Operation(
+        summary = "Extraer y enviar canal a VideoMiner",
+        description = "Extrae los datos de Peertube y hace una petición POST automática al servicio VideoMiner para guardarlos en su base de datos."
+    )
+    @ApiResponse(responseCode = "200", description = "Canal minado y guardado en VideoMiner con éxito")
+    @ApiResponse(responseCode = "404", description = "El canal no existe en Peertube")
+    @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
     // --- POST: MODO MINERO (Envía a VideoMiner) ---
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(
