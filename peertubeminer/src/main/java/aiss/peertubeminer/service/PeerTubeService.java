@@ -34,6 +34,7 @@ public class PeerTubeService {
 
             // 2. Obtener los vídeos
             String videosUrl = BASE_URL + "/video-channels/" + channelId + "/videos?count=" + maxVideos;
+            System.out.println("Buscando vídeos en PeerTube: " + videosUrl);
             VideoResponse videoResponse = restTemplate.getForObject(videosUrl, VideoResponse.class);
 
             if (videoResponse != null && videoResponse.data() != null) {
