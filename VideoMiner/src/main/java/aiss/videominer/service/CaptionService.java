@@ -3,7 +3,7 @@ package aiss.videominer.service;
 import aiss.videominer.model.Caption;
 import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
-import io.micrometer.common.lang.NonNull;
+
 
 import org.springframework.stereotype.Service;
 
