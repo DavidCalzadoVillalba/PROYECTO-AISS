@@ -2,6 +2,9 @@ package aiss.dailymotionminer.controller;
 
 import aiss.dailymotionminer.model.Channel;
 import aiss.dailymotionminer.service.DailymotionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +19,13 @@ public class DailymotionController {
     
     @Autowired
     RestTemplate restTemplate;
-
+    // informacion y codigos para OpenApi
+    @Operation(
+        summary = "Obtener datos de un canal",
+        description = "Busca la información de un canal de Dailymotion por su ID y la devuelve en formato JSON. No guarda nada en base de datos."
+    )
+    @ApiResponse(responseCode = "200", description = "Canal encontrado y devuelto correctamente")
+    @ApiResponse(responseCode = "404", description = "El canal no existe en Dailymotion")
     // --- GET: MODO LECTURA ---
     @GetMapping("/{channelId}")
     public ResponseEntity<Channel> getChannel(
@@ -34,7 +43,13 @@ public class DailymotionController {
         return ResponseEntity.ok(channel);
     }
 
-
+    @Operation(
+        summary = "Extraer y enviar canal a VideoMiner",
+        description = "Extrae los datos de Dailymotion y hace una petición POST automática al servicio VideoMiner para guardarlos en su base de datos."
+    )
+    @ApiResponse(responseCode = "200", description = "Canal minado y guardado en VideoMiner con éxito")
+    @ApiResponse(responseCode = "404", description = "El canal no existe en Dailymotion")
+    @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
     // --- POST: MODO MINERO (Envía a VideoMiner) ---
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(

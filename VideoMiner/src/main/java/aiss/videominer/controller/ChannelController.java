@@ -2,6 +2,10 @@ package aiss.videominer.controller;
 
 import aiss.videominer.model.Channel;
 import aiss.videominer.service.ChannelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +16,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/channels")
+@Tag(name = "Canales (VideoMiner)", description = "Operaciones CRUD para los canales en la base de datos")
 public class ChannelController {
 
     @Autowired
     ChannelService service;
-
+    
+    @Operation(summary = "Listar todos los canales", description = "Devuelve una lista con todos los canales guardados en la base de datos H2.")
+    @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente")
     @GetMapping
     public List<Channel> findAll() {
         return service.getAllChannels();
