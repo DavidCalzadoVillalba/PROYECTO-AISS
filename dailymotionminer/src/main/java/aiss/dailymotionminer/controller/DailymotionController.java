@@ -1,7 +1,7 @@
 package aiss.dailymotionminer.controller;
 
 import aiss.dailymotionminer.model.Channel;
-import aiss.dailymotionminer.service.DailymotionService;
+import aiss.dailymotionminer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class DailymotionController {
 
     @Autowired
-    DailymotionService service;
+    ChannelService service;
     
     @Autowired
     RestTemplate restTemplate;
