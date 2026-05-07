@@ -1,7 +1,7 @@
 package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.model.Channel;
-import aiss.peertubeminer.service.PeerTubeService;
+import aiss.peertubeminer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate; // NUEVO IMPORT
 public class PeerTubeController {
 
     @Autowired
-    PeerTubeService service;
+    ChannelService service;
     @Autowired
     RestTemplate restTemplate;
     // informacion openApi 
