@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DailymotionServiceTests {
 
     @Autowired
-    DailymotionService service;
+    ChannelService service;
 
     @Test
     void testGetChannelExists() {
