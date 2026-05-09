@@ -1,5 +1,6 @@
 package aiss.videominer.controller;
 
+import aiss.videominer.exception.VideoMinerException;
 import aiss.videominer.model.User;
 import aiss.videominer.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,10 +33,10 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un usuario por su id", description = "Devuelve un usuario previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Usuario devuelto correctamente")
-    public ResponseEntity<User> findOne(@PathVariable Long id) {
+    public ResponseEntity<User> findOne(@PathVariable Long id) throws VideoMinerException {
         Optional<User> user = service.getUserById(id);
         if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new VideoMinerException("Usuario no encontrado: " + id);
         }
         return ResponseEntity.ok(user.get());
     }

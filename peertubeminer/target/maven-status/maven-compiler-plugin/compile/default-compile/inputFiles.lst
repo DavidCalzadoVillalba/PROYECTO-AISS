@@ -1,0 +1,13 @@
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\controller\PeerTubeController.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\exception\PeertubeNotFoundException.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\exception\PeertubeServiceUnavailableException.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\model\Caption.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\model\Channel.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\model\Comment.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\model\User.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\model\Video.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\PeertubeminerApplication.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\service\CaptionService.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\service\ChannelService.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\service\CommentService.java
+c:\Users\David\Desktop\Asignaturas\proyecto AISS\PROYECTO-AISS\peertubeminer\src\main\java\aiss\peertubeminer\service\VideoService.java

@@ -1,5 +1,6 @@
 package aiss.peertubeminer.service;
 
+import aiss.peertubeminer.exception.PeertubeNotFoundException;
 import aiss.peertubeminer.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class VideoService {
     
     record VideoResponse(List<Video> data) {}
 
-    public List<Video> getVideos(String channelId, int maxVideos, int maxComments) {
+    public List<Video> getVideos(String channelId, int maxVideos, int maxComments) throws PeertubeNotFoundException {
         try {
             String url = BASE_URL + "/video-channels/" + channelId + "/videos?count=" + maxVideos;
             System.out.println("Buscando vídeos en PeerTube: " + url);
@@ -43,8 +44,8 @@ public class VideoService {
             return videos;
 
         } catch (HttpClientErrorException e) {
-            System.out.println("Error al buscar vídeos del canal: " + channelId);
-            return new ArrayList<>();
+            System.out.println("Error al buscar videos del canal: " + channelId);
+            throw new PeertubeNotFoundException("Error al buscar videos del canal: " + channelId, e);
         }
     }
 }

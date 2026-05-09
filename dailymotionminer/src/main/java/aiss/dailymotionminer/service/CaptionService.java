@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.service;
 
+import aiss.dailymotionminer.exception.DailymotionNotFoundException;
 import aiss.dailymotionminer.model.Caption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class CaptionService {
     record DailymotionSubtitleResponse(List<DailymotionSubtitle> list) {}
     record DailymotionSubtitle(String id, String language, String url) {}
 
-    public List<Caption> getCaptions(String videoId) {
+    public List<Caption> getCaptions(String videoId) throws DailymotionNotFoundException {
         try {
             String url = BASE_URL + "/video/" + videoId + "/subtitles";
             DailymotionSubtitleResponse response = restTemplate.getForObject(url, DailymotionSubtitleResponse.class);
@@ -39,8 +40,8 @@ public class CaptionService {
             return captions;
 
         } catch (HttpClientErrorException e) {
-            System.out.println("No hay subtítulos en el vídeo: " + videoId);
-            return new ArrayList<>(); // Evita nulos
+            System.out.println("No hay subtitulos en el video: " + videoId);
+            throw new DailymotionNotFoundException("No hay subtitulos en el video: " + videoId, e);
         }
     }
 }

@@ -14,13 +14,12 @@ class DailymotionServiceTests {
     ChannelService service;
 
     @Test
-    void testGetChannelExists() {
+    void testGetChannelExists() throws aiss.dailymotionminer.exception.DailymotionNotFoundException {
         System.out.println("EJECUTANDO TEST: Comprobando que se puede obtener un canal real...");
         
-        // Probamos con el canal 'news' que sabemos que existe, pidiendo solo 2 vídeos para que sea rápido
+        // Probamos con el canal que sabemos que existe
         Channel channel = service.getChannel("news", 2, 1);
-        
-        // Estas son las "pruebas" automáticas:
+        //pruebas para las exceptions
         assertNotNull(channel, "El canal devuelto no debería ser null");
         assertEquals("x2ox9lg", channel.getId(), "El ID del canal debería coincidir con el de Dailymotion");
         assertNotNull(channel.getName(), "El nombre del canal no debería ser null");
@@ -31,10 +30,8 @@ class DailymotionServiceTests {
     void testGetChannelNotExists() {
         System.out.println("EJECUTANDO TEST: Comprobando que el servicio maneja bien un ID falso...");
         
-        // Probamos con un ID inventado que es imposible que exista
-        Channel channel = service.getChannel("este_canal_no_existe_9999999", 1, 1);
-        
-        // La prueba: el servicio debería atrapar el error 404 y devolver null tranquilamente
-        assertNull(channel, "El servicio debería devolver null si el canal no existe");
+        // Probamos con un ID que sabemos que no existe
+        assertThrows(aiss.dailymotionminer.exception.DailymotionNotFoundException.class,
+            () -> service.getChannel("prueba_no_existe_el_canal", 1, 1));
     }
 }

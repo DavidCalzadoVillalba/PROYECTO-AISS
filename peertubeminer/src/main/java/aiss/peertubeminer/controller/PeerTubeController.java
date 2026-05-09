@@ -1,5 +1,7 @@
 package aiss.peertubeminer.controller;
 
+import aiss.peertubeminer.exception.PeertubeNotFoundException;
+import aiss.peertubeminer.exception.PeertubeServiceUnavailableException;
 import aiss.peertubeminer.model.Channel;
 import aiss.peertubeminer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,17 +32,13 @@ public class PeerTubeController {
     @ApiResponse(responseCode = "404", description = "El canal no existe en Peertube")
     // GET: solo en modo lectura
     @GetMapping("/{channelId}")
-    public ResponseEntity<Channel> getChannel(
+        public ResponseEntity<Channel> getChannel(
             @PathVariable String channelId,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxComments) {
+            @RequestParam(defaultValue = "2") Integer maxComments) throws PeertubeNotFoundException {
 
         System.out.println("Modo lectura: Buscando canal de Peertube" + channelId);
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
-
-        if (channel == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(channel);
     }
     @Operation(
@@ -52,19 +50,16 @@ public class PeerTubeController {
     @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
     //POST:Envía a VideoMiner
     @PostMapping("/{channelId}")
-    public ResponseEntity<Channel> createChannel(
+        public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxComments) {
+            @RequestParam(defaultValue = "2") Integer maxComments)
+            throws PeertubeNotFoundException, PeertubeServiceUnavailableException {
 
         System.out.println("Modo minado: Extrayendo canal de Peertube " + channelId + " para enviarlo a VideoMiner");
         
         // 1. Obtenemos los datos de la API externa que hemos traducido con jsonAlias
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
-
-        if (channel == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         // 2. ENVIAMOS LOS DATOS A VIDEOMINER
         String videoMinerUrl = "http://localhost:8080/channels";
@@ -81,7 +76,7 @@ public class PeerTubeController {
         } catch (Exception e) {
             System.out.println("Error al comunicarse con VideoMiner: " + e.getMessage());
             // Si VideoMiner está apagado o falla, devolvemos un error 400 (Bad Request) o 503 (Service Unavailable)
-            return ResponseEntity.status(503).build();
+            throw new PeertubeServiceUnavailableException("Error al comunicarse con VideoMiner", e);
         }
     }
 }

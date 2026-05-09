@@ -1,5 +1,6 @@
 package aiss.videominer.controller;
 
+import aiss.videominer.exception.VideoMinerException;
 import aiss.videominer.model.Caption;
 import aiss.videominer.service.CaptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +33,11 @@ public class CaptionController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un subtitulo por su id", description = "Devuelve un subtitulo previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Subtitulo devuelto correctamente")
-    public ResponseEntity<Caption> findOne(@PathVariable String id) {
+    public ResponseEntity<Caption> findOne(@PathVariable String id) throws VideoMinerException {
         Optional<Caption> caption = service.getCaptionById(id);
 
         if (caption.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new VideoMinerException("Subtitulo no encontrado: " + id);
         }
 
         return ResponseEntity.ok(caption.get());
@@ -45,11 +46,11 @@ public class CaptionController {
     @GetMapping("/video/{videoId}")
     @Operation(summary = "Listar subtitulos por video", description = "Devuelve los subtitulos asociados a un video por su id.")
     @ApiResponse(responseCode = "200", description = "Subtitulos devueltos correctamente")
-    public ResponseEntity<List<Caption>> findByVideoId(@PathVariable String videoId) {
+    public ResponseEntity<List<Caption>> findByVideoId(@PathVariable String videoId) throws VideoMinerException {
         Optional<List<Caption>> captions = service.getCaptionsByVideoId(videoId);
 
         if (captions.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new VideoMinerException("Subtitulos no encontrados para el video: " + videoId);
         }
 
         return ResponseEntity.ok(captions.get());

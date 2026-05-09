@@ -1,5 +1,6 @@
 package aiss.videominer.controller;
 
+import aiss.videominer.exception.VideoMinerException;
 import aiss.videominer.model.Video;
 import aiss.videominer.service.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,11 +33,11 @@ public class VideoController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un video por su id", description = "Devuelve un video previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Video devuelto correctamente")
-    public ResponseEntity<Video> findOne(@PathVariable String id) {
+    public ResponseEntity<Video> findOne(@PathVariable String id) throws VideoMinerException {
         Optional<Video> video = service.getVideoById(id);
 
         if (video.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new VideoMinerException("Video no encontrado: " + id);
         }
 
         return ResponseEntity.ok(video.get());

@@ -1,5 +1,7 @@
 package aiss.dailymotionminer.controller;
 
+import aiss.dailymotionminer.exception.DailymotionNotFoundException;
+import aiss.dailymotionminer.exception.DailymotionServiceUnavailableException;
 import aiss.dailymotionminer.model.Channel;
 import aiss.dailymotionminer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,18 +30,14 @@ public class DailymotionController {
     @ApiResponse(responseCode = "404", description = "El canal no existe en Dailymotion")
     // --- GET: MODO LECTURA ---
     @GetMapping("/{channelId}")
-    public ResponseEntity<Channel> getChannel(
+        public ResponseEntity<Channel> getChannel(
             @PathVariable String channelId,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxPages) {
+            @RequestParam(defaultValue = "2") Integer maxPages) throws DailymotionNotFoundException {
 
         System.out.println("Modo lectura: Buscando canal de Dailymotion: " + channelId);
 
         Channel channel = service.getChannel(channelId, maxVideos, maxPages);
-        if (channel == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok(channel);
     }
 
@@ -52,17 +50,15 @@ public class DailymotionController {
     @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
     // --- POST: MODO MINERO (Envía a VideoMiner) ---
     @PostMapping("/{channelId}")
-    public ResponseEntity<Channel> createChannel(
+        public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
             @RequestParam(defaultValue = "10") Integer maxVideos,
-            @RequestParam(defaultValue = "2") Integer maxPages) {
+            @RequestParam(defaultValue = "2") Integer maxPages)
+            throws DailymotionNotFoundException, DailymotionServiceUnavailableException {
 
         System.out.println("Modo minado: Extrayendo canal de Dailymotion: " + channelId + " para enviarlo a VideoMiner");
 
         Channel channel = service.getChannel(channelId, maxVideos, maxPages);
-        if (channel == null) {
-            return ResponseEntity.notFound().build();
-        }
         // 2. ENVIAMOS LOS DATOS A VIDEOMINER
         // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /channels
         String videoMinerUrl = "http://localhost:8080/channels";
@@ -79,6 +75,6 @@ public class DailymotionController {
         } catch (Exception e) {
             System.out.println("Error al comunicarse con VideoMiner: " + e.getMessage());
             // Si VideoMiner está apagado o falla, devolvemos un error 400 (Bad Request) o 503 (Service Unavailable)
-            return ResponseEntity.status(503).build();
+            throw new DailymotionServiceUnavailableException("Error al comunicarse con VideoMiner", e);
         }
     }}

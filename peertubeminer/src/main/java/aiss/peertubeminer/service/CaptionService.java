@@ -1,5 +1,6 @@
 package aiss.peertubeminer.service;
 
+import aiss.peertubeminer.exception.PeertubeNotFoundException;
 import aiss.peertubeminer.model.Caption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,14 @@ public class CaptionService {
     
     record CaptionResponse(List<Caption> data) {}
 
-    public List<Caption> getCaptions(String videoId) {
+    public List<Caption> getCaptions(String videoId) throws PeertubeNotFoundException {
         try {
             String url = BASE_URL + "/videos/" + videoId + "/captions";
             CaptionResponse response = restTemplate.getForObject(url, CaptionResponse.class);
             return (response != null && response.data() != null) ? response.data() : new ArrayList<>();
         } catch (HttpClientErrorException e) {
-            System.out.println("No hay subtítulos (o falló) en el vídeo: " + videoId);
-            return new ArrayList<>(); // Devolvemos lista vacía para que no pete
+            System.out.println("No hay subtitulos (o fallo) en el video: " + videoId);
+            throw new PeertubeNotFoundException("No hay subtitulos en el video: " + videoId, e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package aiss.videominer.controller;
 
+import aiss.videominer.exception.VideoMinerException;
 import aiss.videominer.model.Channel;
 import aiss.videominer.service.ChannelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,10 +32,10 @@ public class ChannelController {
     @Operation(summary = "Listar un canal por su id (nombre de usuario)", description = "Devuelve un canal previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Canal devuelto correctamente")
     @GetMapping("/{id}")
-    public ResponseEntity<Channel> findOne(@PathVariable String id) {
+    public ResponseEntity<Channel> findOne(@PathVariable String id) throws VideoMinerException {
         Optional<Channel> channel = service.getChannelById(id);
         if (!channel.isPresent()) {
-            return ResponseEntity.notFound().build();
+            throw new VideoMinerException("Canal no encontrado: " + id);
         }
         return ResponseEntity.ok(channel.get());
     }

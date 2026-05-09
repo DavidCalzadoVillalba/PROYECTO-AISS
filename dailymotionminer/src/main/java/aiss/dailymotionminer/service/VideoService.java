@@ -1,5 +1,6 @@
 package aiss.dailymotionminer.service;
 
+import aiss.dailymotionminer.exception.DailymotionNotFoundException;
 import aiss.dailymotionminer.model.User;
 import aiss.dailymotionminer.model.Video;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class VideoService {
     record DailymotionVideo(String id, String title, String description, Long created_time, DailymotionOwner owner, List<String> tags) {}
     record DailymotionOwner(String id, String screenname, String url, String avatar_720_url) {}
 
-    public List<Video> getVideos(String channelId, Integer maxVideos) {
+    public List<Video> getVideos(String channelId, Integer maxVideos) throws DailymotionNotFoundException {
         try {
             String url = BASE_URL + "/user/" + channelId + "/videos?fields=id,title,description,created_time,owner.id,owner.screenname,owner.url,owner.avatar_720_url,tags&limit=" + maxVideos;
             DailymotionVideoResponse response = restTemplate.getForObject(url, DailymotionVideoResponse.class);
@@ -63,8 +64,8 @@ public class VideoService {
             return videosLimpios;
 
         } catch (HttpClientErrorException e) {
-            System.out.println("Error al buscar vídeos del canal: " + channelId);
-            return new ArrayList<>();
+            System.out.println("Error al buscar videos del canal: " + channelId);
+            throw new DailymotionNotFoundException("Error al buscar videos del canal: " + channelId, e);
         }
     }
 }
