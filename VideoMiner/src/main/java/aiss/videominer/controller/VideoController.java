@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +26,23 @@ public class VideoController {
     public VideoController(VideoService service) {
         this.service = service;
     }
-
+    // creamos la funcion que permite obtener los videos con paginacion, filtrado y ordenacion
+    @Operation(summary = "Listar vídeos con filtros", description = "Permite paginar y filtrar vídeos por nombre")
     @GetMapping
-    @Operation(summary = "Listar todos los videos", description = "Devuelve una lista con todos los videos guardados en la base de datos H2.")
-    @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente")
-    public List<Video> findAll() {
-        return service.getAllVideos();
-    }
+    public ResponseEntity<List<Video>> findAll(
+        @RequestParam(required = false) String name,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id,asc") String sort) {
+
+    String[] sortParams = sort.split(",");
+    Sort sorting = Sort.by(sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortParams[0]);
+    Pageable pageable = PageRequest.of(page, size, sorting);
+
+    Page<Video> videoPage = service.getVideos(name, pageable);
+    
+    return ResponseEntity.ok(videoPage.getContent());
+}
 
     @GetMapping("/{id}")
     @Operation(summary = "Listar un video por su id", description = "Devuelve un video previamente guardado en la base de datos H2.")
