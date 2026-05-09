@@ -28,7 +28,7 @@ public class PeerTubeController {
     )
     @ApiResponse(responseCode = "200", description = "Canal encontrado y devuelto correctamente")
     @ApiResponse(responseCode = "404", description = "El canal no existe en Peertube")
-    // --- GET: MODO LECTURA ---
+    // GET: solo en modo lectura
     @GetMapping("/{channelId}")
     public ResponseEntity<Channel> getChannel(
             @PathVariable String channelId,
@@ -50,7 +50,7 @@ public class PeerTubeController {
     @ApiResponse(responseCode = "200", description = "Canal minado y guardado en VideoMiner con éxito")
     @ApiResponse(responseCode = "404", description = "El canal no existe en Peertube")
     @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
-    // --- POST: MODO MINERO (Envía a VideoMiner) ---
+    //POST:Envía a VideoMiner
     @PostMapping("/{channelId}")
     public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
@@ -59,7 +59,7 @@ public class PeerTubeController {
 
         System.out.println("Modo minado: Extrayendo canal de Peertube " + channelId + " para enviarlo a VideoMiner");
         
-        // 1. Obtenemos los datos de la API externa (ya traducidos gracias a @JsonAlias)
+        // 1. Obtenemos los datos de la API externa que hemos traducido con jsonAlias
         Channel channel = service.getChannel(channelId, maxVideos, maxComments);
 
         if (channel == null) {
@@ -67,13 +67,12 @@ public class PeerTubeController {
         }
 
         // 2. ENVIAMOS LOS DATOS A VIDEOMINER
-        // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /channels
         String videoMinerUrl = "http://localhost:8080/channels";
         
         try {
             System.out.println("Enviando datos a VideoMiner en: " + videoMinerUrl);
             
-            // postForObject hace la petición POST y le envía nuestro objeto 'channel' en el body
+            // postForObject hace la petición POST y le envía nuestro objeto channel en el body
             Channel savedChannel = restTemplate.postForObject(videoMinerUrl, channel, Channel.class);
             
             // Devolvemos el canal tal y como nos lo ha confirmado VideoMiner (probablemente con un ID nuevo de base de datos)

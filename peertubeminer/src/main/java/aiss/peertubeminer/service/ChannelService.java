@@ -26,7 +26,7 @@ public class ChannelService {
 
             if (channel == null) return null;
 
-            // Delegamos la búsqueda de vídeos y sus detalles al VideoService
+            // envbiamos la búsqueda de vídeos y sus detalles al VideoService
             channel.setVideos(videoService.getVideos(channelId, maxVideos, maxComments));
 
             return channel;

@@ -2,6 +2,9 @@ package aiss.videominer.controller;
 
 import aiss.videominer.model.Video;
 import aiss.videominer.service.VideoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/videos")
+@Tag(name = "Videos (VideoMiner)", description = "Operaciones de consulta para los videos en la base de datos")
 public class VideoController {
 
     private final VideoService service;
@@ -18,14 +22,16 @@ public class VideoController {
         this.service = service;
     }
 
-    // Operación para listar todos los vídeos
     @GetMapping
+    @Operation(summary = "Listar todos los videos", description = "Devuelve una lista con todos los videos guardados en la base de datos H2.")
+    @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente")
     public List<Video> findAll() {
         return service.getAllVideos();
     }
 
-    // Operación para buscar un vídeo por id
     @GetMapping("/{id}")
+    @Operation(summary = "Listar un video por su id", description = "Devuelve un video previamente guardado en la base de datos H2.")
+    @ApiResponse(responseCode = "200", description = "Video devuelto correctamente")
     public ResponseEntity<Video> findOne(@PathVariable String id) {
         Optional<Video> video = service.getVideoById(id);
 
