@@ -2,6 +2,8 @@ package aiss.videominer.service;
 
 import aiss.videominer.model.User;
 import aiss.videominer.repository.UserRepository;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class UserService {
         return repository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(@NonNull Long id) {
         return repository.findById(id);
     }
 }

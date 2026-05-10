@@ -18,7 +18,6 @@ public class ChannelService {
 
     private final String BASE_URL = "https://api.dailymotion.com";
 
-    // Wrapper para el Canal
     record DailymotionChannel(String id, String screenname, String description, Long created_time) {}
 
     public Channel getChannel(String channelId, Integer maxVideos, Integer maxPages) throws DailymotionNotFoundException {
@@ -37,7 +36,7 @@ public class ChannelService {
             channel.setDescription(dc.description());
             channel.setCreatedTime(dc.created_time() != null ? String.valueOf(dc.created_time()) : "Fecha desconocida");
 
-            // Delegamos la búsqueda de vídeos al VideoService
+            // enviamos la búsqueda de vídeos a VideoService
             channel.setVideos(videoService.getVideos(channelId, maxVideos));
 
             return channel;

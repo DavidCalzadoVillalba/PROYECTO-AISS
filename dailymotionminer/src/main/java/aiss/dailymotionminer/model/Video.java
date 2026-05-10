@@ -22,7 +22,7 @@ public class Video {
 
     @JsonProperty("user")
     @JsonAlias("owner") // Dailymotion lo llama owner
-    private User user; // Renombrado de 'author' a 'user' para cumplir con el UML
+    private User user; // camb9iar nombre de 'author' a 'user'
 
     @JsonProperty("comments")
     private List<Comment> comments;
@@ -30,11 +30,8 @@ public class Video {
     @JsonProperty("captions")
     private List<Caption> captions;
 
-    // --- NUEVO: Añadimos la propiedad tags ---
     @JsonProperty("tags")
     private List<String> tags;
-
-    // --- GETTERS Y SETTERS ---
 
     public String getId() {
         return id;
@@ -92,7 +89,6 @@ public class Video {
         this.captions = captions;
     }
 
-    // --- GETTER Y SETTER PARA LOS TAGS ---
     public List<String> getTags() {
         return tags;
     }
