@@ -3,6 +3,8 @@ package aiss.videominer.service;
 import aiss.videominer.model.Comment;
 import aiss.videominer.repository.CommentRepository;
 import aiss.videominer.repository.VideoRepository;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,11 @@ public class CommentService {
         return repository.findAll();
     }
 
-    public Optional<Comment> getCommentById(String id) {
+    public Optional<Comment> getCommentById(@NonNull String id) {
         return repository.findById(id);
     }
 
-    public Optional<List<Comment>> getCommentsByVideoId(String videoId) {
+    public Optional<List<Comment>> getCommentsByVideoId(@NonNull String videoId) {
         if (!videoRepository.existsById(videoId)) {
             return Optional.empty();
         }

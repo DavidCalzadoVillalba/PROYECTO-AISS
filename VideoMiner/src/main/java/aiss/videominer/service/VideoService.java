@@ -5,6 +5,7 @@ import aiss.videominer.repository.VideoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public class VideoService {
 
     private final VideoRepository repository;
     //creamos metodo para realizar el filtro y la paginacion 
-    public Page<Video> getVideos(String name, Pageable pageable) {
+    public Page<Video> getVideos(String name, @NonNull Pageable pageable) {
     if (name != null && !name.isEmpty()) {
         return repository.findByNameContaining(name, pageable);
     }
@@ -29,7 +30,7 @@ public class VideoService {
         return repository.findAll();
     }
 
-    public Optional<Video> getVideoById(String id) {
+    public Optional<Video> getVideoById(@NonNull String id) {
         return repository.findById(id);
     }
 }

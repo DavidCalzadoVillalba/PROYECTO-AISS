@@ -25,7 +25,6 @@ public class VideoService {
 
     private final String BASE_URL = "https://api.dailymotion.com";
 
-    // Wrappers temporales para vídeos
     record DailymotionVideoResponse(List<DailymotionVideo> list) {}
     record DailymotionVideo(String id, String title, String description, Long created_time, DailymotionOwner owner, List<String> tags) {}
     record DailymotionOwner(String id, String screenname, String url, String avatar_720_url) {}
@@ -54,7 +53,7 @@ public class VideoService {
                         v.setUser(author);
                     }
 
-                    // Delegamos la creación de comentarios y subtítulos a sus respectivos servicios
+                    // enviamos la creación de comentarios y subtítulos a sus respectivos servicios
                     v.setComments(commentService.getCommentsFromTags(dv.tags(), v.getReleaseTime()));
                     v.setCaptions(captionService.getCaptions(dv.id()));
 

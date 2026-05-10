@@ -28,7 +28,7 @@ public class DailymotionController {
     )
     @ApiResponse(responseCode = "200", description = "Canal encontrado y devuelto correctamente")
     @ApiResponse(responseCode = "404", description = "El canal no existe en Dailymotion")
-    // --- GET: MODO LECTURA ---
+    // GET
     @GetMapping("/{channelId}")
         public ResponseEntity<Channel> getChannel(
             @PathVariable String channelId,
@@ -48,7 +48,7 @@ public class DailymotionController {
     @ApiResponse(responseCode = "200", description = "Canal minado y guardado en VideoMiner con éxito")
     @ApiResponse(responseCode = "404", description = "El canal no existe en Dailymotion")
     @ApiResponse(responseCode = "503", description = "Error de comunicación: VideoMiner está apagado o ha rechazado los datos")
-    // --- POST: MODO MINERO (Envía a VideoMiner) ---
+    // POST
     @PostMapping("/{channelId}")
         public ResponseEntity<Channel> createChannel(
             @PathVariable String channelId,
@@ -59,22 +59,20 @@ public class DailymotionController {
         System.out.println("Modo minado: Extrayendo canal de Dailymotion: " + channelId + " para enviarlo a VideoMiner");
 
         Channel channel = service.getChannel(channelId, maxVideos, maxPages);
-        // 2. ENVIAMOS LOS DATOS A VIDEOMINER
-        // Asumimos que VideoMiner corre en el puerto 8080 y su endpoint es /channels
+        // ENVIAMOS DATOS A VIDEOMINER
         String videoMinerUrl = "http://localhost:8080/channels";
         
         try {
             System.out.println("Enviando datos a VideoMiner en: " + videoMinerUrl);
             
-            // postForObject hace la petición POST y le envía nuestro objeto 'channel' en el body
+            // postForObject hace la petición POST y le envía nuestro channel
             Channel savedChannel = restTemplate.postForObject(videoMinerUrl, channel, Channel.class);
-            
-            // Devolvemos el canal tal y como nos lo ha confirmado VideoMiner (probablemente con un ID nuevo de base de datos)
+
             return ResponseEntity.ok(savedChannel);
             
         } catch (Exception e) {
             System.out.println("Error al comunicarse con VideoMiner: " + e.getMessage());
-            // Si VideoMiner está apagado o falla, devolvemos un error 400 (Bad Request) o 503 (Service Unavailable)
+            // Si VideoMiner está apagado o falla, devolvemos un error 400 o 503
             throw new DailymotionServiceUnavailableException("Error al comunicarse con VideoMiner", e);
         }
     }}

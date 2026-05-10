@@ -4,7 +4,7 @@ import aiss.videominer.model.Caption;
 import aiss.videominer.repository.CaptionRepository;
 import aiss.videominer.repository.VideoRepository;
 
-
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +25,11 @@ public class CaptionService {
         return repository.findAll();
     }
     
-    public Optional<Caption> getCaptionById(String id) {
+    public Optional<Caption> getCaptionById(@NonNull String id) {
         return repository.findById(id);
     }
 
-    public Optional<List<Caption>> getCaptionsByVideoId(String videoId) {
+    public Optional<List<Caption>> getCaptionsByVideoId(@NonNull String videoId) {
         if (!videoRepository.existsById(videoId)) {
             return Optional.empty();
         }
