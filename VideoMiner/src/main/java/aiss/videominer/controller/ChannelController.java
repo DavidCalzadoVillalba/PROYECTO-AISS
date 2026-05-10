@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ChannelController {
     @Operation(summary = "Listar un canal por su id (nombre de usuario)", description = "Devuelve un canal previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Canal devuelto correctamente")
     @GetMapping("/{id}")
-    public ResponseEntity<Channel> findOne(@PathVariable String id) throws VideoMinerException {
+    public ResponseEntity<Channel> findOne(@PathVariable @NonNull String id) throws VideoMinerException {
         Optional<Channel> channel = service.getChannelById(id);
         if (!channel.isPresent()) {
             throw new VideoMinerException("Canal no encontrado: " + id);
@@ -43,7 +44,7 @@ public class ChannelController {
     @PostMapping
     @Operation(summary = "Crear un canal", description = "Guarda un canal en la base de datos H2 y devuelve el recurso creado.")
     @ApiResponse(responseCode = "201", description = "Canal creado correctamente")
-    public ResponseEntity<Channel> createChannel(@RequestBody Channel channel) {
+    public ResponseEntity<Channel> createChannel(@RequestBody @NonNull Channel channel) {
         Channel savedChannel = service.saveChannel(channel);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedChannel);
     }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class CaptionController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un subtitulo por su id", description = "Devuelve un subtitulo previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Subtitulo devuelto correctamente")
-    public ResponseEntity<Caption> findOne(@PathVariable String id) throws VideoMinerException {
+    public ResponseEntity<Caption> findOne(@PathVariable @NonNull String id) throws VideoMinerException {
         Optional<Caption> caption = service.getCaptionById(id);
 
         if (caption.isEmpty()) {
@@ -46,7 +47,7 @@ public class CaptionController {
     @GetMapping("/video/{videoId}")
     @Operation(summary = "Listar subtitulos por video", description = "Devuelve los subtitulos asociados a un video por su id.")
     @ApiResponse(responseCode = "200", description = "Subtitulos devueltos correctamente")
-    public ResponseEntity<List<Caption>> findByVideoId(@PathVariable String videoId) throws VideoMinerException {
+    public ResponseEntity<List<Caption>> findByVideoId(@PathVariable @NonNull String videoId) throws VideoMinerException {
         Optional<List<Caption>> captions = service.getCaptionsByVideoId(videoId);
 
         if (captions.isEmpty()) {

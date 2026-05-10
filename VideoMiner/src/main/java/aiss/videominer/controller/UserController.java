@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un usuario por su id", description = "Devuelve un usuario previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Usuario devuelto correctamente")
-    public ResponseEntity<User> findOne(@PathVariable Long id) throws VideoMinerException {
+    public ResponseEntity<User> findOne(@PathVariable @NonNull Long id) throws VideoMinerException {
         Optional<User> user = service.getUserById(id);
         if (user.isEmpty()) {
             throw new VideoMinerException("Usuario no encontrado: " + id);

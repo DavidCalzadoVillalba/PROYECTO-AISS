@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,7 +48,7 @@ public class VideoController {
     @GetMapping("/{id}")
     @Operation(summary = "Listar un video por su id", description = "Devuelve un video previamente guardado en la base de datos H2.")
     @ApiResponse(responseCode = "200", description = "Video devuelto correctamente")
-    public ResponseEntity<Video> findOne(@PathVariable String id) throws VideoMinerException {
+    public ResponseEntity<Video> findOne(@PathVariable @NonNull String id) throws VideoMinerException {
         Optional<Video> video = service.getVideoById(id);
 
         if (video.isEmpty()) {
