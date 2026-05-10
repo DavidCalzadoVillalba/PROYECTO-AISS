@@ -21,7 +21,7 @@ class ChannelServiceTests {
     void testSaveAndRetrieveChannel() {
         System.out.println("EJECUTANDO TEST: Transacción de BD local (Guardar y Leer)...");
 
-        // 1. Preparar los datos falsos en memoria
+        // 1. Preparar los datos falsos
         Channel testChannel = new Channel();
         testChannel.setId("test_bd_001");
         testChannel.setName("Canal de Arquitectura Software");
@@ -31,7 +31,6 @@ class ChannelServiceTests {
         // 2. Ejecutar las acciones en el servicio
         Channel savedChannel = service.saveChannel(testChannel);
 
-        // Si tu método de buscar devuelve Optional (lo normal en Spring Data):
         Optional<Channel> retrievedChannelOpt = service.getChannelById("test_bd_001"); 
 
         // 3. Comprobar que todo ha ido perfecto
