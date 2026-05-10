@@ -30,8 +30,6 @@ class PeerTubeServiceTests {
     @Test
     void testGetChannelNotExists() throws PeertubeNotFoundException {
         System.out.println("EJECUTANDO TEST: Comprobando que el servicio maneja bien un canal falso...");
-        // Si tu servicio devuelve null al fallar (como hicimos antes):
-        // assertNull(channel, "El canal debería ser null porque no existe");
         
         // Probamos con un ID que sabemos que no existe
         assertThrows(PeertubeNotFoundException.class, () -> service.getChannel("este_canal_es_falso_123", 1, 1));

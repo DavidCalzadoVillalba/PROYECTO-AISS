@@ -16,7 +16,6 @@ public class VideoService {
     @Autowired
     RestTemplate restTemplate;
 
-    // Inyectamos los otros servicios para delegarles el trabajo
     @Autowired
     CommentService commentService;
 

@@ -18,10 +18,7 @@ public class User {
     private String user_link;
 
     @JsonProperty("picture_link")
-    private String picture_link; 
-    // Nota: La foto de perfil en PeerTube viene en un array anidado llamado 'avatars', 
-    // es un poco complejo de mapear de forma plana, así que es normal si este se queda en null 
-    // a menos que hagáis un mapeo personalizado más avanzado.
+    private String picture_link;
     
     public Long getId() {
         return id;

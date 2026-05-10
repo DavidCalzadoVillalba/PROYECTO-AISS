@@ -29,7 +29,7 @@ public class ChannelService {
                 throw new PeertubeNotFoundException("Canal no encontrado: " + channelId);
             }
 
-            // envbiamos la búsqueda de vídeos y sus detalles al VideoService
+            // enviamos la búsqueda de vídeos y sus detalles al VideoService
             channel.setVideos(videoService.getVideos(channelId, maxVideos, maxComments));
 
             return channel;
